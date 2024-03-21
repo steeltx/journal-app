@@ -1,6 +1,7 @@
 import { collection, doc, setDoc } from "firebase/firestore/lite";
 import { FirebaseDB } from "../../firebase/config";
-import { addNewEmptyNote, savingNewnote, setActiveNote } from "./journalSlice";
+import { addNewEmptyNote, savingNewnote, setActiveNote, setNotes } from "./journalSlice";
+import { loadNotes } from "../../helpers/loadNotes";
 
 export const startNewNote = () => {
     return async (dispatch, getState) => {
@@ -26,5 +27,15 @@ export const startNewNote = () => {
         dispatch(addNewEmptyNote(newNote));
         // indicar que es la nota activa
         dispatch(setActiveNote(newNote));
+    }
+}
+
+export const startLoadingNotes = () => {
+    return async (dispatch, getState) => {
+        const { uid } = getState().auth;
+        if(!uid) throw new Error('El UID no existe');
+        const notes = await loadNotes(uid);
+        // llamar a funcion que agregar las notas en el state
+        dispatch(setNotes(notes));
     }
 }

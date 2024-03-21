@@ -9,6 +9,11 @@ export const useForm = ( initialForm = {}, formValidations = {} ) => {
         createValidators();
     },[formState]);
 
+    // cuando el valor inicial cambia, actualizar el formstate
+    useEffect(() => {
+        setFormState(initialForm);
+    },[initialForm]);
+
     const isFormValid = useMemo( () => {
         // recorrer todos los campos y si es diferente a null, es que existe un problema
         for (const formValue of Object.keys(formValidation)) {
