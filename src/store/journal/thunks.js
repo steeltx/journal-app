@@ -1,6 +1,6 @@
 import { collection, doc, setDoc } from "firebase/firestore/lite";
 import { FirebaseDB } from "../../firebase/config";
-import { addNewEmptyNote, savingNewnote, setActiveNote, setNotes } from "./journalSlice";
+import { addNewEmptyNote, savingNewnote, setActiveNote, setNotes, setSaving, updateNote } from "./journalSlice";
 import { loadNotes } from "../../helpers/loadNotes";
 
 export const startNewNote = () => {
@@ -37,5 +37,22 @@ export const startLoadingNotes = () => {
         const notes = await loadNotes(uid);
         // llamar a funcion que agregar las notas en el state
         dispatch(setNotes(notes));
+    }
+}
+
+export const startSaveNote = () => {
+    return async(dispatch, getState) => {
+        dispatch(setSaving());
+        const { uid } = getState().auth;
+        const { active:note } = getState().journal;
+        // eliminar la propiedad ID de la nota
+        const noteToFireStore = {...note};
+        delete noteToFireStore.id;
+        // referencia del documento a modificar
+        const docRef = doc(FirebaseDB, `${uid}/journal/notes/${note.id}`);
+        // realizar el merge del registro
+        await setDoc(docRef, noteToFireStore, { merge: true});
+        // actualizar la nota en el estado
+        dispatch(updateNote(note));
     }
 }
