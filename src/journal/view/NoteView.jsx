@@ -105,7 +105,9 @@ export const NoteView = () => {
                 />
             </Grid>
 
-            <ImageGallery />
+            <ImageGallery 
+                images={note.imageUrls}
+            />
         </Grid>
     )
 }
