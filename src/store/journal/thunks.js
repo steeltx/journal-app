@@ -1,6 +1,6 @@
-import { collection, doc, setDoc } from "firebase/firestore/lite";
+import { collection, deleteDoc, doc, setDoc } from "firebase/firestore/lite";
 import { FirebaseDB } from "../../firebase/config";
-import { addNewEmptyNote, savingNewnote, setActiveNote, setNotes, setPhotosToActiveNote, setSaving, updateNote } from "./journalSlice";
+import { addNewEmptyNote, deleteNoteById, savingNewnote, setActiveNote, setNotes, setPhotosToActiveNote, setSaving, updateNote } from "./journalSlice";
 import { loadNotes } from "../../helpers/loadNotes";
 import { fileUpload } from "../../helpers/fileUpload";
 
@@ -16,7 +16,8 @@ export const startNewNote = () => {
         {
             title: '',
             body: '',
-            date: new Date().getTime(),
+            imageUrls: [],
+            date: new Date().getTime()
         }
         // ingresar en la url/colección indicada
         const newDoc = doc( collection(FirebaseDB, `${uid}/journal/notes`) );
@@ -70,5 +71,18 @@ export const startUploadingFiles = ( files = [] ) => {
         // llamar todas las promesas y esperar las urls respuesta
         const photosUrls = await Promise.all(fileUploadPromises);
         dispatch(setPhotosToActiveNote(photosUrls));
+    }
+}
+
+export const startDeletingNote = () => {
+    return async ( dispatch, getState) => {
+        const { uid } = getState().auth;
+        const { active: note } = getState().journal;
+        // se crea la referencia del documento
+        const docRef = doc(FirebaseDB, `${uid}/journal/notes/${note.id}`);
+        // eliminar el documento indicado en la referencia anterior
+        await deleteDoc(docRef);
+        // eliminar del estado local
+        dispatch(deleteNoteById(note.id));
     }
 }
