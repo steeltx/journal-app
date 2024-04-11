@@ -1,7 +1,8 @@
 
 export const fileUpload = async (file) => {
-    if(!file) throw new Error('No hay archivos');
-    const cloudUrl = import.meta.env.VITE_CLOUDINADY_URL;
+    //if(!file) throw new Error('No hay archivos');
+    if(!file) return null;
+    const cloudUrl = "";
     // crear el body de la peticion post
     const formData = new FormData();
     formData.append('upload_preset','react-journal');
@@ -16,6 +17,7 @@ export const fileUpload = async (file) => {
         const cloudResponse = await resp.json();
         return cloudResponse.secure_url;
     } catch (error) {
-        throw new Error(error.message);
+        //throw new Error(error.message);
+        return null;
     }
 }
