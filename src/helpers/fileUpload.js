@@ -2,7 +2,8 @@
 export const fileUpload = async (file) => {
     //if(!file) throw new Error('No hay archivos');
     if(!file) return null;
-    const cloudUrl = "https://api.cloudinary.com/v1_1/dfcoinvcp/upload";
+    // para el testing usar el string de la url en lugar de env
+    const cloudUrl = import.meta.env.VITE_CLOUDINADY_URL;
     // crear el body de la peticion post
     const formData = new FormData();
     formData.append('upload_preset','react-journal');

@@ -2,9 +2,9 @@ import { fileUpload } from "../../helpers/fileUpload";
 import { v2 as cloudinary } from 'cloudinary';
 
 cloudinary.config({
-    cloud_name: 'dfcoinvcp',
-    api_key: '626393767669395',
-    api_secret: 'kTqEhmvqmNTb6AE6-CWMhsk735I',
+    cloud_name: '',
+    api_key: '',
+    api_secret: '',
     secure: true
 });
 
